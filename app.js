@@ -24,10 +24,11 @@ const server = restify.createServer()
       })
       server.post('/api/messages', connector.listen())
 
-      // Serves static HTML
+      // Serve the embded HTML chat bot on our index.html page. Users will interact w/ the bot there.
+      // Look in the public folder and grab the index.html page
       server.get(/\/?.*/, restify.serveStatic({
         directory: './public',
-        default: 'index.html'
+        default:   'index.html'
       }))
 
 bot.dialog('/', [
