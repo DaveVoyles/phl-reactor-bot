@@ -9,9 +9,9 @@ const querystring = require('querystring');
 var connector = new builder.ChatConnector({
     appId:       process.env.APP_ID,
     appPassword: process.env.APP_PASS
-}) 
+});
  
-const bot = new builder.UniversalBot(connector)
+const bot = new builder.UniversalBot(connector);
 
 // Request
 // Pull this ID from the URL located here: https://qnamaker.ai/Home/MyServices
@@ -22,14 +22,14 @@ const server = restify.createServer()
       server.listen(process.env.port || process.env.PORT || 3978, function () {
         console.log('%s listening to %s', server.name, server.url); 
       })
-      server.post('/api/messages', connector.listen())
+      server.post('/api/messages', connector.listen());
 
       // Serve the embded HTML chat bot on our index.html page. Users will interact w/ the bot there.
       // Look in the public folder and grab the index.html page
       server.get(/\/?.*/, restify.serveStatic({
         directory: './public',
         default:   'index.html'
-      }))
+      }));
 
 bot.dialog('/', [
   // TODO: Add additonal prompts here
@@ -78,14 +78,14 @@ const pingQnAService = (q, cb) => {
   request('http://qnaservice.cloudapp.net/KBService.svc/GetAnswer?kbId=' + knowledgeBaseID + '&question=' + q, 
   function (error, response, body) {
       if (error) {
-        cb(error, null)
+        cb(error, null);
       } else if (response.statusCode !== 200) {
               // Valid response from QnA but it's an error
               // return the response for further processing
-        cb(response, null)
+        cb(response, null);
       } else {
               // All looks OK, the answer is in the body
-        cb(null, body)
+        cb(null, body);
       }
   })
 }
