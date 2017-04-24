@@ -24,6 +24,11 @@ const server = restify.createServer()
       })
       server.post('/api/messages', connector.listen())
 
+      // Serves static HTML
+      server.get(/\/?.*/, restify.serveStatic({
+        directory: './public',
+        default: 'index.html'
+      }))
 
 bot.dialog('/', [
   // TODO: Add additonal prompts here
