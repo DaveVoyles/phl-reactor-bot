@@ -1,0 +1,31 @@
+{
+  "name": "phl-reactor-bot",
+  "version": "1.0.0",
+  "description": "Bot to serve as an FAQ",
+  "main": "app.js",
+  "dependencies": {
+      "botbuilder": "^3.7.0",
+      "dotenv": "^4.0.0",
+      "restify": "^4.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaveVoyles/phl-reactor-bot.git"
+  },
+  "keywords": [
+    "bot",
+    "azure",
+    "microsoft",
+    "reactor"
+  ],
+  "author": "Dave Voyles",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DaveVoyles/phl-reactor-bot/issues"
+  },
+  "homepage": "https://github.com/DaveVoyles/phl-reactor-bot#readme"
+}

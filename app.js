@@ -5,16 +5,19 @@ const querystring = require('querystring');
                     require('dotenv'     ).config(); 
 
 // Create chat bot
-// var connector = new builder.ChatConnector({
-//     appId: process.env.APP_ID,
-//     appPassword: process.env.APP_PASS
-// }) 
+// These come from https://apps.dev.microsoft.com/#/appList  
+var connector = new builder.ChatConnector({
+    appId:       process.env.APP_ID,
+    appPassword: process.env.APP_PASS
+}) 
+
 
 
  
 const bot = new builder.UniversalBot(connector)
 
 // Request
+// Pull this ID from the URL located here: https://qnamaker.ai/Home/MyServices
 const knowledgeBaseID = "0951de94-9705-49ec-b68a-6be0b6eadbda";
 
 // bot setup for restify server
@@ -65,21 +68,21 @@ bot.dialog('/', [
 
 
 // Helper functions
-const qna = (q, cb) => {
+const pingQnAService = (q, cb) => {
   // Here's where we pass anything the user typed along to the QnA service.
-  q = querystring.escape(q)
-  // request(hostUrl + postUrl + q, function (error, response, body) {
-   request('http://qnaservice.cloudapp.net/KBService.svc/GetAnswer?kbId=' + knowledgeBaseID + '&question=' + q, 
-           function (error, response, body) {
-              if (error) {
-                cb(error, null)
-              } else if (response.statusCode !== 200) {
-                      // Valid response from QnA but it's an error
-                      // return the response for further processing
-                cb(response, null)
-              } else {
-                      // All looks OK, the answer is in the body
-                cb(null, body)
-              }
-          })
+  q = querystring.escape(q);
+
+  request('http://qnaservice.cloudapp.net/KBService.svc/GetAnswer?kbId=' + knowledgeBaseID + '&question=' + q, 
+  function (error, response, body) {
+      if (error) {
+        cb(error, null)
+      } else if (response.statusCode !== 200) {
+              // Valid response from QnA but it's an error
+              // return the response for further processing
+        cb(response, null)
+      } else {
+              // All looks OK, the answer is in the body
+        cb(null, body)
+      }
+  })
 }
