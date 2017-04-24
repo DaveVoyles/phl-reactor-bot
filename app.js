@@ -10,9 +10,6 @@ var connector = new builder.ChatConnector({
     appId:       process.env.APP_ID,
     appPassword: process.env.APP_PASS
 }) 
-
-
-
  
 const bot = new builder.UniversalBot(connector)
 
@@ -37,7 +34,7 @@ bot.dialog('/', [
   // Send response to the server
   (session, response) => {
     // call QnA Maker endpoint
-    qna(response.response, (err, result) => {
+    pingQnAService(response.response, (err, result) => {
       if (err) {
         console.error(err);
         session.send('Unfortunately an error occurred. Try again.')
