@@ -5,15 +5,15 @@ const querystring = require('querystring');
                     require('dotenv'     ).config(); 
 
 // Create chat bot
-// These come from https://apps.dev.microsoft.com/#/appList  
+// These values come from https://apps.dev.microsoft.com/#/appList  
 var connector = new builder.ChatConnector({
     appId:       process.env.APP_ID,
     appPassword: process.env.APP_PASS
 });
- 
+
+// Instance of bot which connects via our App ID & Password 
 const bot = new builder.UniversalBot(connector);
 
-// Request
 // Pull this ID from the URL located here: https://qnamaker.ai/Home/MyServices
 const knowledgeBaseID = "0951de94-9705-49ec-b68a-6be0b6eadbda";
 
@@ -31,33 +31,35 @@ const server = restify.createServer()
         default:   'index.html'
       }));
 
+// Root directory, by default
 bot.dialog('/', [
   // TODO: Add additonal prompts here
   (session, response) => {
         builder.Prompts.text(session, 'Have any questions about the Microsoft Reactor?');
   },
 
-  // Send response to the server
+  // Send user's response to the server
   (session, response) => {
-    // call QnA Maker endpoint
-    pingQnAService(response.response, (err, result) => {
-      if (err) {
-        console.error(err);
-        session.send('Unfortunately an error occurred. Try again.')
-      } else {
-                    // The QnA returns a JSON: { answer:XXXX, score: XXXX: }
-                    // where score is a confidence the answer matches the question.
-                    // Advanced implementations might log lower scored questions and
-                    // answers since they tend to indicate either gaps in the FAQ content
-                    // or a model that needs training
+      // call QnA Maker endpoint (our FAQ)
+      pingQnAService(response.response, (err, result) => {
+        if (err) {
+          console.error(err);
+          session.send('Unfortunately an error occurred:' + err + '. ' + 'Try again.')
+        } else {
+                // The QnA returns a JSON: { answer:XXXX, score: XXXX: }
+                // where score is a confidence the answer matches the question.
+                // Advanced implementations might log lower scored questions and
+                // answers since they tend to indicate either gaps in the FAQ content
+                // or a model that needs training
 
-        // parse answer from Q&A maker
-        session.send(JSON.parse(result).answer)
-        // Displays question to the screen
-        builder.Prompts.confirm(session, 'Do you have any more questions about the Reactor? (Yes or No)');
-      }
-    })
-  },
+          // parse answer from Q&A maker, which is our pre-defined FAQ, and draw it to the screen
+          session.send(JSON.parse(result).answer)
+          // Ask user for more information
+          builder.Prompts.confirm(session, 'Do you have any more questions about the Reactor? (Yes or No)');
+        }
+      })
+    },
+
   (session, response) => {
     if (response.response) {
         // user has another question
